@@ -1,0 +1,10 @@
+node_modules/
+.vercel/
+*.db
+*.db.gz
+.env
+.env.local
+.DS_Store
+UCMR5_All.txt
+UCMR5_AddtlDataElem.txt
+UCMR5_ZIPCodes.txt
