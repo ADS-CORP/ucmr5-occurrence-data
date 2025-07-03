@@ -4,7 +4,9 @@
   "description": "API for UCMR5 water quality data",
   "scripts": {
     "dev": "vercel dev",
-    "build": "node scripts/convert-to-sqlite.js",
+    "build": "node scripts/convert-to-sqlite.js && node scripts/build-json-api.js",
+    "build:db": "node scripts/convert-to-sqlite.js",
+    "build:json": "node scripts/build-json-api.js",
     "deploy": "vercel --prod"
   },
   "dependencies": {

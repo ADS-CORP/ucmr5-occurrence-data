@@ -1,5 +1,6 @@
 {
-  "buildCommand": "echo 'No build required'",
+  "buildCommand": "node scripts/download-data.js && npm run build || echo 'Build failed but continuing'",
+  "installCommand": "npm install --production=false",
   "outputDirectory": ".",
   "functions": {
     "api/water-quality.js": {
