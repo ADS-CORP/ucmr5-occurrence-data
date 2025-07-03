@@ -39,14 +39,11 @@ async function processDataStream() {
     
     const values = line.split('\t');
     
-    // Extract state from PWSID (first 2 digits)
-    const stateCode = values[0].substring(0, 2);
-    
     const record = {
       pwsid: values[0],
       pws_name: values[1],
-      state: stateCode,
-      size: values[21],  // Size is column 21
+      state: values[22],  // State is column 22
+      size: values[21],   // Size is column 21
       region: values[3],
       contaminant: values[4],
       result_value: parseFloat(values[7]),

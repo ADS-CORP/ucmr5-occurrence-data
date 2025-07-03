@@ -58,8 +58,29 @@ export default async function handler(request) {
       
       // Convert state abbreviation to code if needed
       let stateCode = params.state.toUpperCase();
+      
+      // If it's a 2-letter abbreviation that's not numeric, check if we have that file directly
       if (stateCode.length === 2 && !/^\d+$/.test(stateCode)) {
-        // Find the code for this abbreviation
+        // First check if we have a file for this abbreviation
+        const abbrevUrl = new URL(`/api/data/${stateCode}.json`, request.url);
+        const abbrevResponse = await fetch(abbrevUrl);
+        if (abbrevResponse.ok) {
+          results = await abbrevResponse.json();
+          return new Response(JSON.stringify({
+            water_systems: results.slice(params.offset, params.offset + params.limit),
+            pagination: {
+              total: results.length,
+              limit: params.limit,
+              offset: params.offset,
+              has_more: params.offset + params.limit < results.length
+            }
+          }, null, 2), {
+            status: 200,
+            headers: corsHeaders
+          });
+        }
+        
+        // Otherwise try to find the numeric code
         stateCode = Object.entries(stateCodes).find(([code, abbr]) => abbr === stateCode)?.[0] || stateCode;
       }
       
