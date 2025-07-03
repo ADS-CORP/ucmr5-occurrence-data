@@ -1,0 +1,11 @@
+UCMR5_All.txt
+UCMR5_AddtlDataElem.txt
+UCMR5_ZIPCodes.txt
+*.db
+*.db.gz
+node_modules
+.git
+.github
+scripts/upload-data-release.sh
+InstructionsforAccessingUCMRResults_Jan2025_508.pdf
+UCMR5_DataSummary_Apr2025_508.pdf

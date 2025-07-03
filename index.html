@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>UCMR5 Water Quality API</title>
+    <style>
+        body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 50px auto; padding: 20px; }
+        pre { background: #f5f5f5; padding: 15px; overflow-x: auto; }
+        code { background: #f5f5f5; padding: 2px 5px; }
+    </style>
+</head>
+<body>
+    <h1>UCMR5 Water Quality API</h1>
+    <p>Access EPA UCMR5 water quality data by ZIP code, PWSID, or location.</p>
+    
+    <h2>Example Queries</h2>
+    <pre>
+GET /api/water-quality?zipcode=12345
+GET /api/water-quality?pwsid=NY0000123
+GET /api/water-quality?pws_name=Springfield
+GET /api/water-quality?state=NY
+    </pre>
+    
+    <h2>Try It</h2>
+    <p>
+        <a href="/api/water-quality?state=NY&limit=5">/api/water-quality?state=NY&limit=5</a>
+    </p>
+    
+    <h2>Documentation</h2>
+    <p>See <a href="https://github.com/ADS-CORP/ucmr5-occurrence-data">GitHub Repository</a> for full documentation.</p>
+</body>
+</html>
