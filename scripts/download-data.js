@@ -5,13 +5,16 @@ const https = require('https');
 const path = require('path');
 
 const DATA_SOURCES = {
+  // Vercel Blob (if configured)
+  vercel: process.env.UCMR5_DATA_URL || process.env.VERCEL_BLOB_URL,
+  
   // GitHub Release (will be created after first push)
   github: 'https://github.com/ADS-CORP/ucmr5-occurrence-data/releases/download/data-files/UCMR5_All.txt',
   
   // Direct EPA download (backup)
   epa: 'https://www.epa.gov/system/files/documents/2025-01/ucmr5_all.txt',
   
-  // Cloudflare R2 (optional, add your URL here)
+  // Custom CDN (optional)
   cdn: process.env.DATA_CDN_URL
 };
 

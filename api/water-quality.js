@@ -1,12 +1,18 @@
-import Database from 'better-sqlite3-wasm';
+import initSqlJs from 'sql.js';
 
 // Cache database instance
 let db = null;
 
 async function getDatabase() {
   if (!db) {
-    // Fetch SQLite database from CDN/GitHub releases
+    // Initialize SQL.js
+    const SQL = await initSqlJs({
+      locateFile: file => `https://sql.js.org/dist/${file}`
+    });
+    
+    // Fetch SQLite database from Vercel Blob or GitHub releases
     const dbUrl = process.env.DATABASE_URL || 
+      process.env.VERCEL_BLOB_URL ||
       'https://github.com/ADS-CORP/ucmr5-occurrence-data/releases/download/latest/ucmr5-data.db.gz';
     
     const response = await fetch(dbUrl);
@@ -20,7 +26,7 @@ async function getDatabase() {
       data = new Uint8Array(await new Response(stream).arrayBuffer());
     }
     
-    db = new Database(data);
+    db = new SQL.Database(data);
   }
   return db;
 }
@@ -81,7 +87,7 @@ async function getWaterSystems(params) {
   const { where, values } = buildWhereClause(params);
   
   // Get water systems matching criteria
-  const systems = database.prepare(`
+  const query = `
     SELECT 
       s.pwsid,
       s.pws_name,
@@ -96,12 +102,25 @@ async function getWaterSystems(params) {
     ${where}
     ORDER BY s.pws_name
     LIMIT ? OFFSET ?
-  `).all([...values, params.limit, params.offset]);
+  `;
+  
+  const systemsResult = database.exec(query, [...values, params.limit, params.offset]);
+  const systems = systemsResult[0]?.values.map(row => ({
+    pwsid: row[0],
+    pws_name: row[1],
+    state: row[2],
+    region: row[3],
+    size: row[4],
+    zip_codes: row[5],
+    contaminants_detected: row[6],
+    last_test_date: row[7],
+    total_samples: row[8]
+  })) || [];
   
   // Get detailed contaminant data for each system
   const results = [];
   for (const system of systems) {
-    const contaminants = database.prepare(`
+    const contaminantQuery = `
       SELECT 
         contaminant,
         MAX(result_value) as max_value,
@@ -114,7 +133,16 @@ async function getWaterSystems(params) {
       WHERE pwsid = ?
       GROUP BY contaminant, units, mrl
       ORDER BY contaminant
-    `).all(system.pwsid);
+    `;
+    const contaminants = database.exec(contaminantQuery, [system.pwsid])[0]?.values.map(row => ({
+      contaminant: row[0],
+      max_value: row[1],
+      result_sign: row[2],
+      units: row[3],
+      mrl: row[4],
+      test_count: row[5],
+      latest_test: row[6]
+    })) || [];
     
     // Format contaminant data
     const contaminantData = {};
@@ -146,19 +174,21 @@ async function getWaterSystems(params) {
   }
   
   // Get total count for pagination
-  const countResult = database.prepare(`
+  const countQuery = `
     SELECT COUNT(*) as total
     FROM pws_summary s
     ${where}
-  `).get(values);
+  `;
+  const countResult = database.exec(countQuery, values)[0];
+  const total = countResult?.values[0][0] || 0;
   
   return {
     water_systems: results,
     pagination: {
-      total: countResult.total,
+      total: total,
       limit: params.limit,
       offset: params.offset,
-      has_more: params.offset + params.limit < countResult.total
+      has_more: params.offset + params.limit < total
     }
   };
 }
