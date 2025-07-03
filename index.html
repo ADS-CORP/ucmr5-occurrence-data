@@ -12,12 +12,21 @@
     <h1>UCMR5 Water Quality API</h1>
     <p>Access EPA UCMR5 water quality data by ZIP code, PWSID, or location.</p>
     
-    <h2>Example Queries</h2>
+    <h2>API Endpoints</h2>
+    
+    <h3>Standard API</h3>
     <pre>
 GET /api/water-quality?zipcode=12345
 GET /api/water-quality?pwsid=NY0000123
 GET /api/water-quality?pws_name=Springfield
 GET /api/water-quality?state=NY
+    </pre>
+    
+    <h3>Zapier-Optimized API</h3>
+    <p>Use this endpoint for better Zapier integration with flattened fields:</p>
+    <pre>
+GET /api/water-quality-zapier?zipcode=12345
+GET /api/water-quality-zapier?pwsid=CA0110008
     </pre>
     
     <h2>Try It</h2>

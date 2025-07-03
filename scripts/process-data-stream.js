@@ -45,11 +45,11 @@ async function processDataStream() {
       state: values[22],  // State is column 22
       size: values[21],   // Size is column 21
       region: values[3],
-      contaminant: values[4],
-      result_value: parseFloat(values[7]),
-      result_sign: values[8],
-      mrl: parseFloat(values[9]),
-      units: values[10],
+      contaminant: values[13],  // Contaminant is column 13
+      result_value: parseFloat(values[18]),  // AnalyticalResultValue is column 18
+      result_sign: values[17],  // AnalyticalResultsSign is column 17
+      mrl: parseFloat(values[14]),  // MRL is column 14
+      units: values[15],  // Units is column 15
       collection_date: values[11]
     };
     

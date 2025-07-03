@@ -127,8 +127,31 @@ export default async function handler(request) {
     const total = results.length;
     const paginatedResults = results.slice(params.offset, params.offset + params.limit);
     
+    // Add raw JSON and summaries for each water system for Zapier
+    const resultsWithRaw = paginatedResults.map(system => {
+      // Calculate detected contaminants
+      const detectedContaminants = Object.entries(system.contaminants || {})
+        .filter(([_, info]) => info.detected)
+        .map(([name, info]) => ({
+          name,
+          value: info.value,
+          unit: info.unit
+        }));
+      
+      return {
+        ...system,
+        summary: {
+          detected_count: detectedContaminants.length,
+          detected_contaminants: detectedContaminants,
+          detected_names: detectedContaminants.map(c => c.name).join(', '),
+          detected_values: detectedContaminants.map(c => `${c.name}: ${c.value} ${c.unit}`).join('; ')
+        },
+        raw_json: JSON.stringify(system)
+      };
+    });
+    
     return new Response(JSON.stringify({
-      water_systems: paginatedResults,
+      water_systems: resultsWithRaw,
       pagination: {
         total,
         limit: params.limit,
