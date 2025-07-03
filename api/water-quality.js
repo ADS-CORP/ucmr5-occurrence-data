@@ -51,7 +51,19 @@ export default async function handler(request) {
     
     // Handle state search
     else if (params.state && !params.pws_name && !params.pwsid) {
-      const stateDataUrl = new URL(`/api/data/${params.state}.json`, request.url);
+      // Load state codes mapping
+      const stateCodesUrl = new URL('/api/data/state-codes.json', request.url);
+      const stateCodesResponse = await fetch(stateCodesUrl);
+      const stateCodes = await stateCodesResponse.json();
+      
+      // Convert state abbreviation to code if needed
+      let stateCode = params.state.toUpperCase();
+      if (stateCode.length === 2 && !/^\d+$/.test(stateCode)) {
+        // Find the code for this abbreviation
+        stateCode = Object.entries(stateCodes).find(([code, abbr]) => abbr === stateCode)?.[0] || stateCode;
+      }
+      
+      const stateDataUrl = new URL(`/api/data/${stateCode}.json`, request.url);
       const response = await fetch(stateDataUrl);
       
       if (!response.ok) {

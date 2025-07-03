@@ -1,6 +1,5 @@
 {
-  "buildCommand": "node scripts/download-data.js && npm run build || echo 'Build failed but continuing'",
-  "installCommand": "npm install --production=false",
+  "buildCommand": "echo 'Using pre-built data files'",
   "outputDirectory": ".",
   "functions": {
     "api/water-quality.js": {

@@ -5,10 +5,10 @@ const https = require('https');
 const path = require('path');
 
 const DATA_SOURCES = {
-  // Vercel Blob (if configured)
-  vercel: process.env.UCMR5_DATA_URL || process.env.VERCEL_BLOB_URL,
+  // Vercel Blob (primary source)
+  vercel: process.env.UCMR5_DATA_URL || 'https://vtrirhzlzlb3oogr.public.blob.vercel-storage.com/UCMR5_All-kHtGeXUxrMUbHiqJbFqWUGZF3uOF5z.txt',
   
-  // GitHub Release (will be created after first push)
+  // GitHub Release (backup)
   github: 'https://github.com/ADS-CORP/ucmr5-occurrence-data/releases/download/data-files/UCMR5_All.txt',
   
   // Direct EPA download (backup)
