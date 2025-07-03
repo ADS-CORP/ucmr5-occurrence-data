@@ -10,8 +10,7 @@
     "deploy": "vercel --prod"
   },
   "dependencies": {
-    "@vercel/blob": "^0.19.0",
-    "sql.js": "^1.10.2"
+    "@vercel/blob": "^0.19.0"
   },
   "devDependencies": {
     "better-sqlite3": "^9.2.2",
